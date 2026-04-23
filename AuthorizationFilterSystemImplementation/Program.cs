@@ -34,7 +34,7 @@ builder.Services.AddAuthentication(options =>
     })
     .AddJwtBearer(options =>
     {
-// Configure parameters for validating incoming JWT tokens
+        // Configure parameters for validating incoming JWT tokens
         options.TokenValidationParameters = new TokenValidationParameters()
         {
             // Do NOT validate the issuer (the token's "iss" claim)
