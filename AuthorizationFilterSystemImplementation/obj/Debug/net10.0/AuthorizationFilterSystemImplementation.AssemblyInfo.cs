@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("AuthorizationFilterSystemImplementation")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+bc17a2a68872e4c40817bdbd2d4dbd36e467d15a")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7809136e43285795d0de3c5877f9be8cda574cec")]
 [assembly: System.Reflection.AssemblyProductAttribute("AuthorizationFilterSystemImplementation")]
 [assembly: System.Reflection.AssemblyTitleAttribute("AuthorizationFilterSystemImplementation")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

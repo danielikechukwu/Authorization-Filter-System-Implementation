@@ -1,14 +1,18 @@
-﻿using AuthorizationFilterSystemImplementation.DTOs;
+﻿using System.Runtime.InteropServices;
+using System.Security.Claims;
+using System.Text;
+using AuthorizationFilterSystemImplementation.DTOs;
 using AuthorizationFilterSystemImplementation.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 namespace AuthorizationFilterSystemImplementation.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class AuthController
+public class AuthController : ControllerBase
 {
     private readonly IConfiguration _configuration;
     
@@ -36,7 +40,36 @@ public class AuthController
         if (user == null)
         {
             // If no matching user, credentials are invalid — respond with 401 Unauthorized status code
-            
+            return Unauthorized("Invalid username or password");
         }
+        
+        // Create a list of claims to embed inside the JWT token for this user
+        var claims = new List<Claim>
+        {
+            // Claim to identify the user by their email address
+            new Claim(ClaimTypes.Name, user.Email),
+            
+            // Custom claim with user's unique Id
+            new Claim("UserId", user.Id.ToString()),
+        };
+        
+        // Add claims for each role assigned to the user (roles are comma-separated string)
+        var roles = user.Roles.Split(',', StringSplitOptions.RemoveEmptyEntries);
+
+        foreach (var role in roles)
+        {
+            // Add a role claim for each role
+            claims.Add(new Claim(ClaimTypes.Role, role.Trim()));
+        }
+        
+        // Generate a symmetric security key from the secret configured in appsettings.json
+        var secretKey = _configuration.GetValue<string>("JwtSettings:SecretKey") ?? "0f95ab026fc61bbb2c83ccd68ea4c7c7bd69cb8bb19085324976e620a1583031";
+
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
+        
+        // Specify signing credentials using HMAC SHA256 algorithm and the generated key
+        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+        
+        // Create a JWT token embedding the claims, with no issuer/audience for simplicity, and expiration set to 30 minutes from now
     }
 }
