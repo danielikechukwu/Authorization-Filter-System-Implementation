@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Runtime.InteropServices;
 using System.Security.Claims;
 using System.Text;
 using AuthorizationFilterSystemImplementation.DTOs;
@@ -71,5 +72,18 @@ public class AuthController : ControllerBase
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
         
         // Create a JWT token embedding the claims, with no issuer/audience for simplicity, and expiration set to 30 minutes from now
+        var token = new JwtSecurityToken(
+            issuer: null,
+            audience: null,
+            claims: claims,
+            expires: DateTime.UtcNow.AddMinutes(30), // Token valid for 30 minutes
+            signingCredentials: creds
+            );
+        
+        // Serialize the JWT token to a string
+        var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
+        
+        // Return the JWT token string as JSON to the client
+        return Ok(new { token = tokenString });
     }
 }
